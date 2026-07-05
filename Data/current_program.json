@@ -1,0 +1,9 @@
+{
+  "start_date": "2026-06-01",
+  "weeks": [
+    { "week": 1, "phase": "build" },
+    { "week": 2, "phase": "intensify" },
+    { "week": 3, "phase": "intensify" },
+    { "week": 4, "phase": "deload" }
+  ]
+}

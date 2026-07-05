@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>BackTracker</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0e1013">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="topnav">
+  <button class="nav-tab" data-group="chest">Chest</button>
+  <button class="nav-tab" data-group="back">Back</button>
+  <button class="nav-tab" data-group="legs">Legs</button>
+</nav>
+
+<main id="app">
+  <div id="exercise-list"></div>
+
+  <div class="quicklist-section">
+    <div class="section-label">Quick add</div>
+    <div id="quick-list" class="quicklist-row"></div>
+  </div>
+
+  <div class="search-section">
+    <input type="text" id="search-input" placeholder="Search exercises…" autocomplete="off">
+    <div id="search-results"></div>
+  </div>
+</main>
+
+<!-- Logic layer: each file is independently editable / replaceable -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="logic/log_store.js"></script>
+<script src="logic/search.js"></script>
+<script src="logic/ai_coach_generate.js"></script> 
+<script type="module" src="logic/exercise_list.js"></script>
+<script type="module" src="logic/set_prediction.js"></script>
+<script src="logic/ai_coach_text.js"></script>
+<script src="logic/search_function.js"></script>
+<script src="logic/drive_sync.js"></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "name": "BackTracker",
+  "short_name": "BackTracker",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0e1013",
+  "theme_color": "#0e1013"
+}
