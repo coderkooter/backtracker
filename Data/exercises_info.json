@@ -7,80 +7,24 @@
     ],
     "increase_steps": 2.5,
     "percentage_increase": {
-      "deload": 2,
-      "build": 4,
-      "intensify": 6,
-      "peak": 10
+      "deload": 1,
+      "build": 2.5,
+      "intensify": 4,
+      "peak": 5
     }
   },
-  "Incline Dumbbell Press": {
+  "Incline Bench Press": {
     "category": "chest",
     "rep_range": [
-      6,
-      10
-    ],
-    "increase_steps": 2,
-    "percentage_increase": {
-      "deload": 2,
-      "build": 5,
-      "intensify": 7,
-      "peak": 12
-    }
-  },
-  "Cable Fly": {
-    "category": "chest",
-    "rep_range": [
-      10,
-      15
+      4,
+      8
     ],
     "increase_steps": 2.5,
     "percentage_increase": {
-      "deload": 2,
-      "build": 5,
-      "intensify": 7,
-      "peak": 12
-    }
-  },
-  "Dips": {
-    "category": "chest",
-    "rep_range": [
-      6,
-      10
-    ],
-    "increase_steps": 2.5,
-    "percentage_increase": {
-      "deload": 2,
-      "build": 4,
-      "intensify": 6,
-      "peak": 10
-    }
-  },
-  "Push-Up": {
-    "category": "chest",
-    "rep_range": [
-      8,
-      15
-    ],
-    "increase_steps": 2.5,
-    "percentage_increase": {
-      "deload": 2,
-      "build": 4,
-      "intensify": 6,
-      "peak": 10
-    }
-  },
-  "Pec Deck": {
-    "category": "chest",
-    "rep_range": [
-      10,
-      15
-    ],
-    "increase_steps": 2.5,
-    "percentage_increase": {
-      "deload": 2,
-      "build": 5,
-      "intensify": 7,
-      "peak": 12
+      "deload": 1,
+      "build": 2.5,
+      "intensify": 4,
+      "peak": 5
     }
   },
   "Decline Press": {
@@ -91,10 +35,66 @@
     ],
     "increase_steps": 2.5,
     "percentage_increase": {
-      "deload": 2,
-      "build": 4,
-      "intensify": 6,
-      "peak": 10
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Smith Machine Bench Press": {
+    "category": "chest",
+    "rep_range": [
+      5,
+      8
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Incline Dumbbell Press": {
+    "category": "chest",
+    "rep_range": [
+      6,
+      10
+    ],
+    "increase_steps": 2,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Flat Dumbbell Press": {
+    "category": "chest",
+    "rep_range": [
+      6,
+      10
+    ],
+    "increase_steps": 2,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Decline Dumbbell Press": {
+    "category": "chest",
+    "rep_range": [
+      8,
+      12
+    ],
+    "increase_steps": 2,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
     }
   },
   "Machine Press": {
@@ -105,10 +105,122 @@
     ],
     "increase_steps": 2.5,
     "percentage_increase": {
-      "deload": 2,
-      "build": 5,
-      "intensify": 7,
-      "peak": 12
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Landmine Press": {
+    "category": "chest",
+    "rep_range": [
+      8,
+      12
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Dips": {
+    "category": "chest",
+    "rep_range": [
+      6,
+      10
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Push-Up": {
+    "category": "chest",
+    "rep_range": [
+      8,
+      15
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Pec Deck": {
+    "category": "chest",
+    "rep_range": [
+      10,
+      15
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Cable Fly": {
+    "category": "chest",
+    "rep_range": [
+      10,
+      15
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Incline Cable Fly": {
+    "category": "chest",
+    "rep_range": [
+      10,
+      15
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Cable Crossover": {
+    "category": "chest",
+    "rep_range": [
+      12,
+      15
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Dumbbell Fly": {
+    "category": "chest",
+    "rep_range": [
+      10,
+      15
+    ],
+    "increase_steps": 2,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
     }
   },
   "Deadlift": {
@@ -119,10 +231,38 @@
     ],
     "increase_steps": 2.5,
     "percentage_increase": {
-      "deload": 2,
-      "build": 4,
-      "intensify": 6,
-      "peak": 10
+      "deload": 1,
+      "build": 2.5,
+      "intensify": 4,
+      "peak": 5
+    }
+  },
+  "Sumo Deadlift": {
+    "category": "back",
+    "rep_range": [
+      1,
+      5
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 2.5,
+      "intensify": 4,
+      "peak": 5
+    }
+  },
+  "Rack Pull": {
+    "category": "back",
+    "rep_range": [
+      3,
+      6
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 2.5,
+      "intensify": 4,
+      "peak": 5
     }
   },
   "Barbell Row": {
@@ -133,13 +273,55 @@
     ],
     "increase_steps": 2.5,
     "percentage_increase": {
-      "deload": 2,
-      "build": 4,
-      "intensify": 6,
-      "peak": 10
+      "deload": 1,
+      "build": 2.5,
+      "intensify": 4,
+      "peak": 5
     }
   },
-  "Lat Pulldown": {
+  "Pendlay Row": {
+    "category": "back",
+    "rep_range": [
+      5,
+      8
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 2.5,
+      "intensify": 4,
+      "peak": 5
+    }
+  },
+  "T-Bar Row": {
+    "category": "back",
+    "rep_range": [
+      6,
+      10
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Dumbbell Row": {
+    "category": "back",
+    "rep_range": [
+      6,
+      10
+    ],
+    "increase_steps": 2,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Chest-Supported Row": {
     "category": "back",
     "rep_range": [
       8,
@@ -147,24 +329,10 @@
     ],
     "increase_steps": 2.5,
     "percentage_increase": {
-      "deload": 2,
-      "build": 5,
-      "intensify": 7,
-      "peak": 12
-    }
-  },
-  "Cable Row": {
-    "category": "back",
-    "rep_range": [
-      8,
-      12
-    ],
-    "increase_steps": 2.5,
-    "percentage_increase": {
-      "deload": 2,
-      "build": 5,
-      "intensify": 7,
-      "peak": 12
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
     }
   },
   "Machine Row": {
@@ -175,10 +343,66 @@
     ],
     "increase_steps": 2.5,
     "percentage_increase": {
-      "deload": 2,
-      "build": 5,
-      "intensify": 7,
-      "peak": 12
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Cable Row": {
+    "category": "back",
+    "rep_range": [
+      8,
+      12
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Lat Pulldown": {
+    "category": "back",
+    "rep_range": [
+      8,
+      12
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Wide-Grip Lat Pulldown": {
+    "category": "back",
+    "rep_range": [
+      8,
+      12
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Close-Grip Lat Pulldown": {
+    "category": "back",
+    "rep_range": [
+      8,
+      12
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
     }
   },
   "Pull-Up": {
@@ -189,24 +413,38 @@
     ],
     "increase_steps": 2.5,
     "percentage_increase": {
-      "deload": 2,
-      "build": 4,
-      "intensify": 6,
-      "peak": 10
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
     }
   },
-  "Face Pull": {
+  "Chin-Up": {
     "category": "back",
     "rep_range": [
-      12,
-      20
+      5,
+      10
     ],
     "increase_steps": 2.5,
     "percentage_increase": {
-      "deload": 2,
-      "build": 5,
-      "intensify": 7,
-      "peak": 12
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Inverted Row": {
+    "category": "back",
+    "rep_range": [
+      8,
+      15
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
     }
   },
   "Straight-Arm Pulldown": {
@@ -217,10 +455,24 @@
     ],
     "increase_steps": 2.5,
     "percentage_increase": {
-      "deload": 2,
-      "build": 5,
-      "intensify": 7,
-      "peak": 12
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Face Pull": {
+    "category": "back",
+    "rep_range": [
+      12,
+      20
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
     }
   },
   "Squat": {
@@ -231,10 +483,80 @@
     ],
     "increase_steps": 2.5,
     "percentage_increase": {
-      "deload": 2,
-      "build": 4,
-      "intensify": 6,
-      "peak": 10
+      "deload": 1,
+      "build": 2.5,
+      "intensify": 4,
+      "peak": 5
+    }
+  },
+  "Front Squat": {
+    "category": "legs",
+    "rep_range": [
+      3,
+      6
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 2.5,
+      "intensify": 4,
+      "peak": 5
+    }
+  },
+  "Box Squat": {
+    "category": "legs",
+    "rep_range": [
+      3,
+      6
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 2.5,
+      "intensify": 4,
+      "peak": 5
+    }
+  },
+  "Smith Machine Squat": {
+    "category": "legs",
+    "rep_range": [
+      6,
+      10
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Hack Squat": {
+    "category": "legs",
+    "rep_range": [
+      8,
+      12
+    ],
+    "increase_steps": 5,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Goblet Squat": {
+    "category": "legs",
+    "rep_range": [
+      8,
+      12
+    ],
+    "increase_steps": 2,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
     }
   },
   "Leg Press": {
@@ -245,66 +567,24 @@
     ],
     "increase_steps": 5,
     "percentage_increase": {
-      "deload": 2,
-      "build": 5,
-      "intensify": 7,
-      "peak": 12
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
     }
   },
-  "Romanian Deadlift": {
+  "Bulgarian Split Squat": {
     "category": "legs",
     "rep_range": [
-      6,
-      10
+      8,
+      12
     ],
-    "increase_steps": 2.5,
+    "increase_steps": 2,
     "percentage_increase": {
-      "deload": 2,
-      "build": 4,
-      "intensify": 6,
-      "peak": 10
-    }
-  },
-  "Leg Curl": {
-    "category": "legs",
-    "rep_range": [
-      10,
-      15
-    ],
-    "increase_steps": 2.5,
-    "percentage_increase": {
-      "deload": 2,
-      "build": 5,
-      "intensify": 7,
-      "peak": 12
-    }
-  },
-  "Leg Extension": {
-    "category": "legs",
-    "rep_range": [
-      10,
-      15
-    ],
-    "increase_steps": 2.5,
-    "percentage_increase": {
-      "deload": 2,
-      "build": 5,
-      "intensify": 7,
-      "peak": 12
-    }
-  },
-  "Calf Raise": {
-    "category": "legs",
-    "rep_range": [
-      10,
-      15
-    ],
-    "increase_steps": 2.5,
-    "percentage_increase": {
-      "deload": 2,
-      "build": 5,
-      "intensify": 7,
-      "peak": 12
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
     }
   },
   "Walking Lunge": {
@@ -315,10 +595,52 @@
     ],
     "increase_steps": 2.5,
     "percentage_increase": {
-      "deload": 2,
-      "build": 4,
-      "intensify": 6,
-      "peak": 10
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Step-Up": {
+    "category": "legs",
+    "rep_range": [
+      8,
+      12
+    ],
+    "increase_steps": 2,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Romanian Deadlift": {
+    "category": "legs",
+    "rep_range": [
+      6,
+      10
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Stiff-Leg Deadlift": {
+    "category": "legs",
+    "rep_range": [
+      6,
+      10
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
     }
   },
   "Hip Thrust": {
@@ -329,10 +651,738 @@
     ],
     "increase_steps": 2.5,
     "percentage_increase": {
-      "deload": 2,
-      "build": 4,
-      "intensify": 6,
-      "peak": 10
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Glute Bridge": {
+    "category": "legs",
+    "rep_range": [
+      8,
+      12
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Leg Curl": {
+    "category": "legs",
+    "rep_range": [
+      10,
+      15
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Seated Leg Curl": {
+    "category": "legs",
+    "rep_range": [
+      10,
+      15
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Nordic Curl": {
+    "category": "legs",
+    "rep_range": [
+      5,
+      10
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Leg Extension": {
+    "category": "legs",
+    "rep_range": [
+      10,
+      15
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Calf Raise": {
+    "category": "legs",
+    "rep_range": [
+      10,
+      15
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Standing Calf Raise": {
+    "category": "legs",
+    "rep_range": [
+      12,
+      20
+    ],
+    "increase_steps": 5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Seated Calf Raise": {
+    "category": "legs",
+    "rep_range": [
+      12,
+      20
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Hip Adduction": {
+    "category": "legs",
+    "rep_range": [
+      12,
+      15
+    ],
+    "increase_steps": 5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Hip Abduction": {
+    "category": "legs",
+    "rep_range": [
+      12,
+      15
+    ],
+    "increase_steps": 5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Overhead Press": {
+    "category": "shoulders",
+    "rep_range": [
+      3,
+      6
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 2.5,
+      "intensify": 4,
+      "peak": 5
+    }
+  },
+  "Push Press": {
+    "category": "shoulders",
+    "rep_range": [
+      3,
+      6
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 2.5,
+      "intensify": 4,
+      "peak": 5
+    }
+  },
+  "Seated Dumbbell Shoulder Press": {
+    "category": "shoulders",
+    "rep_range": [
+      6,
+      10
+    ],
+    "increase_steps": 2,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Arnold Press": {
+    "category": "shoulders",
+    "rep_range": [
+      8,
+      12
+    ],
+    "increase_steps": 2,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Machine Shoulder Press": {
+    "category": "shoulders",
+    "rep_range": [
+      8,
+      12
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Upright Row": {
+    "category": "shoulders",
+    "rep_range": [
+      8,
+      12
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Lateral Raise": {
+    "category": "shoulders",
+    "rep_range": [
+      12,
+      20
+    ],
+    "increase_steps": 2,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Cable Lateral Raise": {
+    "category": "shoulders",
+    "rep_range": [
+      12,
+      20
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Front Raise": {
+    "category": "shoulders",
+    "rep_range": [
+      10,
+      15
+    ],
+    "increase_steps": 2,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Rear Delt Fly": {
+    "category": "shoulders",
+    "rep_range": [
+      12,
+      20
+    ],
+    "increase_steps": 2,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Reverse Pec Deck": {
+    "category": "shoulders",
+    "rep_range": [
+      12,
+      20
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Barbell Curl": {
+    "category": "biceps",
+    "rep_range": [
+      6,
+      10
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "EZ-Bar Curl": {
+    "category": "biceps",
+    "rep_range": [
+      8,
+      12
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Wide Arm Bicep Curl": {
+    "category": "biceps",
+    "rep_range": [
+      8,
+      12
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Dumbbell Curl": {
+    "category": "biceps",
+    "rep_range": [
+      8,
+      12
+    ],
+    "increase_steps": 2,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Hammer Curl": {
+    "category": "biceps",
+    "rep_range": [
+      8,
+      12
+    ],
+    "increase_steps": 2,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Incline Dumbbell Curl": {
+    "category": "biceps",
+    "rep_range": [
+      10,
+      12
+    ],
+    "increase_steps": 2,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Preacher Curl": {
+    "category": "biceps",
+    "rep_range": [
+      8,
+      12
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Concentration Curl": {
+    "category": "biceps",
+    "rep_range": [
+      10,
+      15
+    ],
+    "increase_steps": 2,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Cable Curl": {
+    "category": "biceps",
+    "rep_range": [
+      10,
+      15
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Spider Curl": {
+    "category": "biceps",
+    "rep_range": [
+      10,
+      15
+    ],
+    "increase_steps": 2,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Reverse Curl": {
+    "category": "biceps",
+    "rep_range": [
+      10,
+      15
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Close-Grip Bench Press": {
+    "category": "triceps",
+    "rep_range": [
+      5,
+      8
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 2.5,
+      "intensify": 4,
+      "peak": 5
+    }
+  },
+  "Skull Crusher": {
+    "category": "triceps",
+    "rep_range": [
+      8,
+      12
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Overhead Tricep Extension": {
+    "category": "triceps",
+    "rep_range": [
+      8,
+      12
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Cable Overhead Extension": {
+    "category": "triceps",
+    "rep_range": [
+      10,
+      15
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Tricep Pushdown": {
+    "category": "triceps",
+    "rep_range": [
+      10,
+      15
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Rope Pushdown": {
+    "category": "triceps",
+    "rep_range": [
+      10,
+      15
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Dumbbell Kickback": {
+    "category": "triceps",
+    "rep_range": [
+      12,
+      15
+    ],
+    "increase_steps": 2,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Bench Dip": {
+    "category": "triceps",
+    "rep_range": [
+      8,
+      15
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Hanging Leg Raise": {
+    "category": "core",
+    "rep_range": [
+      8,
+      15
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Hanging Knee Raise": {
+    "category": "core",
+    "rep_range": [
+      10,
+      20
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Cable Crunch": {
+    "category": "core",
+    "rep_range": [
+      10,
+      15
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Machine Crunch": {
+    "category": "core",
+    "rep_range": [
+      12,
+      20
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Weighted Sit-Up": {
+    "category": "core",
+    "rep_range": [
+      10,
+      15
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Ab Wheel Rollout": {
+    "category": "core",
+    "rep_range": [
+      8,
+      15
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Russian Twist": {
+    "category": "core",
+    "rep_range": [
+      12,
+      20
+    ],
+    "increase_steps": 2,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Cable Woodchopper": {
+    "category": "core",
+    "rep_range": [
+      10,
+      15
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Wrist Curl": {
+    "category": "forearms",
+    "rep_range": [
+      12,
+      20
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Reverse Wrist Curl": {
+    "category": "forearms",
+    "rep_range": [
+      12,
+      20
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1.5,
+      "build": 3.5,
+      "intensify": 5,
+      "peak": 7
+    }
+  },
+  "Barbell Shrug": {
+    "category": "traps",
+    "rep_range": [
+      8,
+      12
+    ],
+    "increase_steps": 2.5,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
+    }
+  },
+  "Dumbbell Shrug": {
+    "category": "traps",
+    "rep_range": [
+      10,
+      15
+    ],
+    "increase_steps": 2,
+    "percentage_increase": {
+      "deload": 1,
+      "build": 3,
+      "intensify": 4.5,
+      "peak": 6
     }
   }
 }
