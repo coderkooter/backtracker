@@ -265,6 +265,20 @@ function currentWeekFromProgram(currentProgram, now = new Date()) {
  *            e1rm?: number, applied_pct?: number, delivered_rpe?: number, note?: string}}
  */
 function getNextSet(currentExercise, exerciseInfo, currentProgram, logs, currentWeek) {
+  // Guard: an exercise can exist in the LOGS (you've trained it) without existing
+  // in the CATALOG (exercises_info.json). The engine needs the catalog entry for
+  // rep_range / increase_steps / percentage_increase — without it there's nothing
+  // to program against. Return a readable note instead of throwing on .rep_range.
+  if (!exerciseInfo) {
+    return {
+      weight: null,
+      reps: null,
+      target_rpe: null,
+      phase: null,
+      note: `"${currentExercise}" isn't in exercises_info.json — add rep_range, increase_steps and percentage_increase to enable predictions.`,
+    };
+  }
+
   const [low, high] = exerciseInfo.rep_range;
   const step = exerciseInfo.increase_steps;
 
@@ -327,6 +341,20 @@ async function getNextSetFromFiles(currentExercise, dataDir = './Data', currentW
     fetch(`${dataDir}/current_program.json`).then(r => r.json()),
   ]);
   const info = infoBlob[currentExercise];
+
+  // Early, explicit guard so the failure is obvious in logs (which exercise, which
+  // file) rather than surfacing as a cryptic "Cannot read properties of undefined
+  // (reading 'rep_range')" deep inside getNextSet.
+  if (!info) {
+    console.warn(`getNextSetFromFiles: "${currentExercise}" has no entry in ${dataDir}/exercises_info.json`);
+    return {
+      weight: null,
+      reps: null,
+      target_rpe: null,
+      phase: null,
+      note: `"${currentExercise}" isn't in exercises_info.json — add rep_range, increase_steps and percentage_increase to enable predictions.`,
+    };
+  }
 
   // Pull logs straight from Drive (get_data.js). getExerciseLog() returns
   // null if the OAuth token exchange / drive fetch hasn't resolved yet.

@@ -22,8 +22,11 @@
 //      so "bnech pres" still finds "Bench Press". Tolerance scales with word length.
 //   3. Partial / loose matching — exact > prefix > substring > fuzzy, scored
 //      against both the name tokens AND the category, with singular/plural leniency.
+//   4. Dedup — collapses equivalent names ("DB Bench Press" == "Dumbbell Bench
+//      Press") to ONE result, preferring the spelled-out name, so you don't log
+//      the same exercise under two different names.
 //
-// Tune everything in SEARCH_CONFIG / SYNONYMS below.
+// Tune everything in SEARCH_CONFIG / SYNONYMS / CANONICAL_TOKENS below.
 
 // add near the top, just under SEARCH_CONFIG:
 const SEARCH_DEBUG = true; // flip to false once it's working
@@ -70,6 +73,20 @@ const SEARCH_CONFIG = {
     abs: ['ab', 'core'], ab: ['core'], core: ['core'], obliques: ['oblique', 'core'],
     traps: ['trap'], trap: ['trap'], lower: ['lower'],
   };
+
+  // Abbreviation / spelling variants that denote the SAME exercise written a
+  // different way. Used ONLY to collapse duplicate results (e.g. "DB Curl" and
+  // "Dumbbell Curl" -> one entry) — NOT for matching. Keep entries strictly
+  // "identical exercise", equipment/movement only.
+  const CANONICAL_TOKENS = {
+    db: 'dumbbell', dbs: 'dumbbell', dumbell: 'dumbbell', dumbells: 'dumbbell',
+    bb: 'barbell', barbel: 'barbell',
+    kb: 'kettlebell',
+    cbl: 'cable', cbls: 'cable',
+    ohp: 'overhead press', mp: 'military press',
+    rdl: 'romanian deadlift', sldl: 'stiff leg deadlift',
+    bss: 'bulgarian split squat',
+  };
   
   // --- text utils -------------------------------------------------------------
   
@@ -84,6 +101,16 @@ const SEARCH_CONFIG = {
   function _tokenize(s) {
     const n = _norm(s);
     return n ? n.split(' ').filter(Boolean) : [];
+  }
+
+  // Group key: collapse a name's abbreviations so equivalents match.
+  function _canonKey(name) {
+    return _tokenize(name).map(t => CANONICAL_TOKENS[t] || t).join(' ');
+  }
+
+  // True if the name already uses full words (no abbreviation we'd expand).
+  function _isCanonicalName(name) {
+    return _tokenize(name).every(t => !(t in CANONICAL_TOKENS));
   }
   
   // Optimal String Alignment distance (Damerau-Levenshtein w/ adjacent
@@ -247,6 +274,24 @@ const SEARCH_CONFIG = {
   
     scored.sort((a, b) => b[0] - a[0] || a[1].localeCompare(b[1]));
   
+    // Collapse equivalent names (e.g. "DB Bench Press" == "Dumbbell Bench Press").
+    // Keep ONE per canonical key, preferring the spelled-out name, then score.
+    const best = new Map(); // canonKey -> { name, score }
+    for (const [s, name] of scored) {
+      const key = _canonKey(name);
+      const cur = best.get(key);
+      if (!cur) { best.set(key, { name, score: s }); continue; }
+      const curCanon = _isCanonicalName(cur.name);
+      const newCanon = _isCanonicalName(name);
+      if (newCanon !== curCanon) {
+        if (newCanon) best.set(key, { name, score: s }); // prefer the spelled-out one
+      } else if (s > cur.score) {
+        best.set(key, { name, score: s });
+      }
+    }
+    const deduped = [...best.values()]
+      .sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
+  
     if (SEARCH_DEBUG) {
       // show the top scorers even if below threshold, so you can see if it's a
       // MIN_SCORE problem vs a no-match-at-all problem
@@ -254,11 +299,12 @@ const SEARCH_CONFIG = {
         .sort((a, b) => b[0] - a[0]).slice(0, 8);
       console.log(`MIN_SCORE=${SEARCH_CONFIG.MIN_SCORE}. Top 8 by raw score:`,
         allScored.map(([s, n]) => `${n}:${s.toFixed(0)}`));
-      console.log(`→ ${scored.length} passed threshold:`, scored.map(([s, n]) => `${n}:${s.toFixed(0)}`));
+      console.log(`→ ${scored.length} passed threshold, ${deduped.length} after dedup:`,
+        deduped.map(x => `${x.name}:${x.score.toFixed(0)}`));
       console.groupEnd();
     }
   
-    return scored.slice(0, SEARCH_CONFIG.MAX_RESULTS).map(x => x[1]);
+    return deduped.slice(0, SEARCH_CONFIG.MAX_RESULTS).map(x => x.name);
   }
   
   // Expose as globals (classic-script style, matches log_store.js).
