@@ -8,9 +8,14 @@
 // has ever logged (plus everything defined in exercises_info.json) gets
 // bucketed into a tier based on how often — and how recently — it shows up:
 //
-//   Main    -> logged often, and recently. The "default" lifts.
-//   Quick   -> used to be logged often, but has cooled off. Still one tap
-//              away instead of buried in search.
+//   Main    -> logged often, and recently. The "default" lifts. Exercises
+//              flagged "basic": true in exercises_info.json (the program's
+//              core barbell lifts) are ALWAYS here too, regardless of score
+//              or history — you shouldn't have to earn your way back to
+//              Squat/Bench/Deadlift/OHP after a fresh install or a deload.
+//   Quick   -> used to be logged often, but has cooled off, OR logged
+//              occasionally rather than every session. Still one tap away
+//              instead of buried in search.
 //   Search  -> rarely logged, or logged a lot once but now stale for a long
 //              time (fully dropped off). Everything not in Main/Quick lands
 //              here, including brand-new exercises with zero history.
@@ -25,14 +30,14 @@
 //   3. Two independent thresholds (not just one) create hysteresis: an
 //      exercise needs a HIGHER score to *enter* Main than to *stay* in Main
 //      once it's there, and likewise for Quick. This stops an exercise from
-//      flickering between tiers on borderline scores. Since we don't persist
-//      previous tier state, hysteresis is approximated using a secondary
-//      "grace" signal — see resolveTier() — but the enter/exit gap is the
-//      main defense against flapping.
+//      flickering between tiers on borderline scores. The previous tier is
+//      persisted per exercise (see readPrevTier/writeTier) so the enter vs.
+//      exit bar can actually be told apart from one call to the next —
+//      without that state, "enter" and "exit" collapse into the same check.
 //   4. STALE_DAYS is a hard override: if it's been longer than that since the
 //      last session, force the exercise down to Search regardless of score
 //      (an exercise you crushed all year but haven't touched in 3 months
-//      shouldn't still show up in Main).
+//      shouldn't still show up in Main) — "basic" exercises are exempt, see above.
 //
 // All knobs are in CONFIG below — tune freely, nothing else needs to change.
 
@@ -52,19 +57,54 @@ const CONFIG = {
   // Score thresholds. "Enter" is the bar to newly qualify for a tier;
   // "exit" is lower, so an exercise that already earned the tier gets some
   // slack before dropping out — this is the hysteresis behavior.
-  MAIN_ENTER_SCORE: 4.0,
-  MAIN_EXIT_SCORE: 2.5,
-  QUICK_ENTER_SCORE: 1.5,
-  QUICK_EXIT_SCORE: 0.75,
+  //
+  // Calibrated against realistic training cadence (score asymptotes to
+  // 1/(1 - exp(-periodDays / RECENCY_HALF_LIFE_DAYS)) under a steady weekly
+  // rhythm): trained ~1x/week -> asymptote ~3.5, comfortably clears
+  // MAIN_ENTER once it's been consistent for a few weeks; trained roughly
+  // every couple of weeks -> asymptote ~2, sits in Quick; a single one-off
+  // session briefly touches Quick then fades back to Search over ~3 weeks.
+  MAIN_ENTER_SCORE: 3.0,
+  MAIN_EXIT_SCORE: 1.8,
+  // NB: a session logged "today" scores just under 1.0, not exactly 1.0 —
+  // daysAgo() anchors to midnight UTC of the session's day, so age is only
+  // ever exactly 0 if evaluated at that exact midnight. QUICK_ENTER_SCORE
+  // sits at 0.9 (not 1.0) so a same-day log reliably clears it.
+  QUICK_ENTER_SCORE: 0.9,
+  QUICK_EXIT_SCORE: 0.5,
 
   // Hard override: if the most recent session for an exercise is older than
   // this many days, force it down to Search no matter how high its score is.
+  // Exercises flagged "basic" in exercises_info.json ignore this.
   STALE_DAYS: 45,
 
   // Exercises with zero logged sessions ever (brand new / never trained)
-  // always land here.
+  // always land here (unless flagged "basic" — see resolveTier).
   DEFAULT_TIER_FOR_NO_HISTORY: 'Search_List',
 };
+
+// --- tier memory (for real hysteresis) ------------------------------------
+// resolveTier() needs to know which tier an exercise was ALREADY in to tell
+// "enter" and "exit" thresholds apart. Persist the last resolved tier per
+// exercise across calls; wrapped in try/catch so this degrades gracefully
+// wherever localStorage isn't available (tests, SSR).
+const TIER_STORE_PREFIX = 'backtracker_tier__';
+
+function readPrevTier(name) {
+  try {
+    return localStorage.getItem(TIER_STORE_PREFIX + name);
+  } catch {
+    return null;
+  }
+}
+
+function writeTier(name, tier) {
+  try {
+    localStorage.setItem(TIER_STORE_PREFIX + name, tier);
+  } catch {
+    // no-op — nothing to persist to, next call just treats it as fresh
+  }
+}
 
 // --- helpers -------------------------------------------------------------
 
@@ -99,19 +139,23 @@ function scoreOf(days, now) {
   return score;
 }
 
-// Turns a score + last-session age into a tier. Hysteresis is approximated
-// by giving mid-range scores a "grace" nudge toward the tier whose *exit*
-// threshold they still clear, rather than always evaluating against the
-// stricter *enter* threshold. Simple, stateless, good enough without needing
-// to persist previous tiers per exercise.
-function resolveTier(score, lastSessionAgeDays) {
+// Turns a score + last-session age into a tier. prevTier (the tier this
+// exercise resolved to last time) decides which bar applies: already-Main
+// only needs to clear the lower MAIN_EXIT_SCORE to stay; anything else needs
+// the higher MAIN_ENTER_SCORE to newly qualify. Same idea one level down for
+// Quick. That's what actually makes "enter" and "exit" different checks —
+// without prevTier they'd collapse into a single always-use-the-lower-bar test.
+function resolveTier(score, lastSessionAgeDays, prevTier) {
   if (lastSessionAgeDays == null) return CONFIG.DEFAULT_TIER_FOR_NO_HISTORY;
   if (lastSessionAgeDays > CONFIG.STALE_DAYS) return 'Search_List';
 
-  if (score >= CONFIG.MAIN_ENTER_SCORE) return 'Main_List';
-  if (score >= CONFIG.MAIN_EXIT_SCORE) return 'Main_List'; // was already in main, held by hysteresis
-  if (score >= CONFIG.QUICK_ENTER_SCORE) return 'Quick_List';
-  if (score >= CONFIG.QUICK_EXIT_SCORE) return 'Quick_List'; // was already in quick, held by hysteresis
+  const mainBar = prevTier === 'Main_List' ? CONFIG.MAIN_EXIT_SCORE : CONFIG.MAIN_ENTER_SCORE;
+  if (score >= mainBar) return 'Main_List';
+
+  const wasAtLeastQuick = prevTier === 'Main_List' || prevTier === 'Quick_List';
+  const quickBar = wasAtLeastQuick ? CONFIG.QUICK_EXIT_SCORE : CONFIG.QUICK_ENTER_SCORE;
+  if (score >= quickBar) return 'Quick_List';
+
   return 'Search_List';
 }
 
@@ -186,21 +230,34 @@ async function getExerciseList(muscleGroup, dataDir = './Data', now = new Date()
 
   // --- 5. per-exercise tiering ---
   for (const name of exercisesInGroup) {
+    // "basic" lifts (the program's core barbell movements) are always Main —
+    // no history needed, no staleness override, no score to earn. This is
+    // what makes Main non-empty on a fresh install / after a long break.
+    if (infoBlob[name].basic) {
+      result.Main_List.push(name);
+      writeTier(name, 'Main_List');
+      console.log(`  ${name}: flagged "basic" → Main_List (score not evaluated)`);
+      continue;
+    }
+
     const logs = allLogs ? (allLogs[name] || []) : [];
     const days = sessionDays(logs).sort();
 
     if (!days.length) {
       result[CONFIG.DEFAULT_TIER_FOR_NO_HISTORY].push(name);
+      writeTier(name, CONFIG.DEFAULT_TIER_FOR_NO_HISTORY);
       console.log(`  ${name}: 0 sessions → ${CONFIG.DEFAULT_TIER_FOR_NO_HISTORY}`);
       continue;
     }
 
     const lastSessionAgeDays = daysAgo(days[days.length - 1], nowMs);
     const score = scoreOf(days, nowMs);
-    const tier = resolveTier(score, lastSessionAgeDays);
+    const prevTier = readPrevTier(name);
+    const tier = resolveTier(score, lastSessionAgeDays, prevTier);
     result[tier].push(name);
+    writeTier(name, tier);
     console.log(
-      `  ${name}: ${days.length} sessions | score=${score.toFixed(2)} | lastSession=${lastSessionAgeDays.toFixed(1)}d ago → ${tier}`
+      `  ${name}: ${days.length} sessions | score=${score.toFixed(2)} | lastSession=${lastSessionAgeDays.toFixed(1)}d ago | prevTier=${prevTier ?? 'none'} → ${tier}`
     );
   }
 
