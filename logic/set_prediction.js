@@ -28,7 +28,9 @@
 //     }
 //
 //   per-exercise log (as returned by get_next_set(<exercise_name>) in the old stub,
-//   now passed in directly as `logs`):
+//   now passed in directly as `logs`). NOTE: rpe here is the app's raw 1-3 log
+//   button (1 = easy, 2 = target, 3 = grinder), NOT a 1-10 RPE — see toRpe10()
+//   below, which maps it onto the 1-10 scale the rest of this file computes on:
 //     [
 //       {
 //         id: "m3x8k2a1",
@@ -56,6 +58,9 @@
 //     delivered_rpe: 7.4 }
 //
 // How it decides (and what weighs most):
+//   0. The app only logs a coarse 1-3 RPE ("easy" / "target" / "grinder"). That's
+//      mapped onto an equivalent 1-10 RPE (toRpe10()) before anything below touches
+//      it — every formula here, and the phase target RPEs, are on the 1-10 scale.
 //   1. Every logged set -> estimated 1RM (e1RM) via RPE-adjusted Epley:
 //        effective_reps_to_failure = reps + (10 - RPE)
 //      This is the spine: it turns "what felt like X" into an absolute number, so a
@@ -152,6 +157,21 @@ function reliabilityOf(reps, rpe) {
   return 1.0 / (1.0 + RELIABILITY_K * Math.max(0.0, effReps(reps, rpe) - 1.0));
 }
 
+// The UI only ever logs RPE on a coarse 1-3 "feel" scale (see log_store.js /
+// app.js's rpe-btn / drive_sync.js's coach prompt): 1 = easy, 2 = target
+// (matched what the program asked for), 3 = grinder (near failure). Every
+// formula above (effReps, e1rmOf, reliabilityOf, and the PHASE_PROFILE target
+// RPEs) is written against the standard 1-10 RPE scale, so a raw 1-3 log value
+// must be mapped onto its 1-10 equivalent before it touches any of that math.
+// Feeding 1/2/3 straight in used to read every set as absurdly submaximal
+// (effReps = reps + (10 - 2) = reps + 8), inflating e1RM, and made the
+// autoregulation gap in pushFraction() always huge and positive — so the
+// engine always spent the full intensity budget no matter how the set felt.
+const RPE_SCALE_MAP = { 1: 7.0, 2: 8.5, 3: 9.75 };
+function toRpe10(rawRpe) {
+  return RPE_SCALE_MAP[rawRpe] ?? RPE_SCALE_MAP[2];
+}
+
 // --- history shaping --------------------------------------------------------
 
 // day key (UTC date portion) used to group sets into sessions
@@ -160,13 +180,14 @@ function dayKey(timestamp) {
 }
 
 // One set per calendar day: heaviest, RPE as tie-break. Drops deleted logs.
-// Returns sessions oldest -> newest, each { weight, reps, rpe, date }.
+// Returns sessions oldest -> newest, each { weight, reps, rpe, date } where
+// rpe is already mapped onto the internal 1-10 scale (see toRpe10 above).
 function indicatorSets(logs) {
   const byDate = {};
   for (const s of logs) {
     if (s.deleted) continue;
     const d = dayKey(s.timestamp);
-    const rpe = s.rpe ?? 8;
+    const rpe = toRpe10(s.rpe ?? 2);
     const cur = byDate[d];
     if (!cur || s.weight > cur.weight || (s.weight === cur.weight && rpe > cur.rpe)) {
       byDate[d] = { weight: s.weight, reps: s.reps, rpe, date: d };
