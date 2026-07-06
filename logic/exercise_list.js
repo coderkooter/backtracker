@@ -25,10 +25,11 @@
 //   3. Two independent thresholds (not just one) create hysteresis: an
 //      exercise needs a HIGHER score to *enter* Main than to *stay* in Main
 //      once it's there, and likewise for Quick. This stops an exercise from
-//      flickering between tiers on borderline scores. Since we don't persist
-//      previous tier state, hysteresis is approximated using a secondary
-//      "grace" signal — see resolveTier() — but the enter/exit gap is the
-//      main defense against flapping.
+//      flickering between tiers on borderline scores. We don't persist a
+//      "previous tier" anywhere — instead, resolveTier() re-derives it from
+//      the log history itself: it recomputes what the score was the moment
+//      before the most recent session landed. If that already cleared the
+//      enter bar, today only needs to clear the (lower) exit bar to stay put.
 //   4. STALE_DAYS is a hard override: if it's been longer than that since the
 //      last session, force the exercise down to Search regardless of score
 //      (an exercise you crushed all year but haven't touched in 3 months
@@ -52,10 +53,20 @@ const CONFIG = {
   // Score thresholds. "Enter" is the bar to newly qualify for a tier;
   // "exit" is lower, so an exercise that already earned the tier gets some
   // slack before dropping out — this is the hysteresis behavior.
-  MAIN_ENTER_SCORE: 4.0,
-  MAIN_EXIT_SCORE: 2.5,
-  QUICK_ENTER_SCORE: 1.5,
-  QUICK_EXIT_SCORE: 0.75,
+  //
+  // Calibrated against steady-state scores for common training frequencies
+  // (session every N days, trained consistently for months, half-life 21d):
+  //   every 3.5 days (2x/week) -> ~6.5   every 10 days     -> ~2.6
+  //   every 7 days   (1x/week) -> ~3.5   every 14 days     -> ~2.1
+  //                                       every 21-30 days  -> ~1.3-1.6
+  // MAIN_ENTER sits below the weekly steady-state so an exercise trained
+  // about once a week eventually earns Main; QUICK_ENTER sits below the
+  // monthly steady-state so occasional lifts still surface as Quick instead
+  // of being buried in Search.
+  MAIN_ENTER_SCORE: 3.0,
+  MAIN_EXIT_SCORE: 1.8,
+  QUICK_ENTER_SCORE: 1.0,
+  QUICK_EXIT_SCORE: 0.5,
 
   // Hard override: if the most recent session for an exercise is older than
   // this many days, force it down to Search no matter how high its score is.
@@ -99,19 +110,21 @@ function scoreOf(days, now) {
   return score;
 }
 
-// Turns a score + last-session age into a tier. Hysteresis is approximated
-// by giving mid-range scores a "grace" nudge toward the tier whose *exit*
-// threshold they still clear, rather than always evaluating against the
-// stricter *enter* threshold. Simple, stateless, good enough without needing
-// to persist previous tiers per exercise.
-function resolveTier(score, lastSessionAgeDays) {
+// Turns a score + last-session age into a tier, using `priorScore` (the score
+// as of the moment just before the most recent session landed) to tell
+// whether the exercise had already earned a tier — real hysteresis, derived
+// entirely from the log history, no persisted "previous tier" needed.
+function resolveTier(score, priorScore, lastSessionAgeDays) {
   if (lastSessionAgeDays == null) return CONFIG.DEFAULT_TIER_FOR_NO_HISTORY;
   if (lastSessionAgeDays > CONFIG.STALE_DAYS) return 'Search_List';
 
+  const wasMain = priorScore >= CONFIG.MAIN_ENTER_SCORE;
+  const wasQuick = priorScore >= CONFIG.QUICK_ENTER_SCORE;
+
   if (score >= CONFIG.MAIN_ENTER_SCORE) return 'Main_List';
-  if (score >= CONFIG.MAIN_EXIT_SCORE) return 'Main_List'; // was already in main, held by hysteresis
+  if (wasMain && score >= CONFIG.MAIN_EXIT_SCORE) return 'Main_List'; // held by hysteresis
   if (score >= CONFIG.QUICK_ENTER_SCORE) return 'Quick_List';
-  if (score >= CONFIG.QUICK_EXIT_SCORE) return 'Quick_List'; // was already in quick, held by hysteresis
+  if (wasQuick && score >= CONFIG.QUICK_EXIT_SCORE) return 'Quick_List'; // held by hysteresis
   return 'Search_List';
 }
 
@@ -197,10 +210,23 @@ async function getExerciseList(muscleGroup, dataDir = './Data', now = new Date()
 
     const lastSessionAgeDays = daysAgo(days[days.length - 1], nowMs);
     const score = scoreOf(days, nowMs);
-    const tier = resolveTier(score, lastSessionAgeDays);
+
+    // priorScore: the score as of the *previous* session's own date (using
+    // only sessions up to and including that one) — i.e. "had this exercise
+    // already earned its tier as of the last time it was checked in on?"
+    // Tells resolveTier whether today's (possibly decayed) score should get
+    // hysteresis grace, without persisting any tier state anywhere.
+    let priorScore = 0;
+    if (days.length >= 2) {
+      const priorDays = days.slice(0, -1);
+      const priorRefMs = new Date(priorDays[priorDays.length - 1] + 'T00:00:00Z').getTime();
+      priorScore = scoreOf(priorDays, priorRefMs);
+    }
+
+    const tier = resolveTier(score, priorScore, lastSessionAgeDays);
     result[tier].push(name);
     console.log(
-      `  ${name}: ${days.length} sessions | score=${score.toFixed(2)} | lastSession=${lastSessionAgeDays.toFixed(1)}d ago → ${tier}`
+      `  ${name}: ${days.length} sessions | score=${score.toFixed(2)} | priorScore=${priorScore.toFixed(2)} | lastSession=${lastSessionAgeDays.toFixed(1)}d ago → ${tier}`
     );
   }
 
