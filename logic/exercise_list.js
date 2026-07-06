@@ -7,6 +7,8 @@
 
 import { getAllLogs, driveReady } from '../helpers/get_data.js';
 
+const EXERCISE_LIST_DEBUG = false; // flip to true for a per-exercise tiering trace
+
 // --- CONFIG ------------------------------------------------------------
 const CONFIG = {
   RECENCY_HALF_LIFE_DAYS: 21,
@@ -80,14 +82,12 @@ function normKey(s) {
  * @returns {Promise<{Main_List: string[], Quick_List: string[], Search_List: string[]}>}
  */
 async function getExerciseList(muscleGroup, dataDir = './Data', now = new Date()) {
-  console.group(`🏋️ getExerciseList("${muscleGroup}")`);
-  console.log('dataDir:', dataDir, '| now:', now.toISOString());
+  if (EXERCISE_LIST_DEBUG) console.group(`🏋️ getExerciseList("${muscleGroup}")`);
 
   // --- 1. Drive readiness ---
   let driveAvailable = true;
   try {
     await driveReady;
-    console.log('✅ driveReady resolved');
   } catch (err) {
     driveAvailable = false;
     console.warn('⚠️ driveReady rejected — treating all as no-history:', err);
@@ -97,27 +97,20 @@ async function getExerciseList(muscleGroup, dataDir = './Data', now = new Date()
   let infoBlob;
   try {
     const resp = await fetch(`${dataDir}/exercises_info.json`);
-    console.log(`fetch exercises_info.json → status ${resp.status} ${resp.ok ? 'OK' : 'FAILED'}`);
     infoBlob = await resp.json();
   } catch (err) {
     console.error('❌ Could not load/parse exercises_info.json:', err);
-    console.groupEnd();
+    if (EXERCISE_LIST_DEBUG) console.groupEnd();
     throw err;
   }
   const allNames = Object.keys(infoBlob);
-  console.log(`infoBlob has ${allNames.length} exercises total`);
 
   // --- 3. category matching ---
-  const categoriesSeen = [...new Set(allNames.map(n => infoBlob[n].category))];
-  console.log('distinct categories in JSON:', categoriesSeen);
-  console.log(`looking for category === "${muscleGroup.toLowerCase()}" (case-insensitive)`);
-
   const exercisesInGroup = allNames.filter(
     name => (infoBlob[name].category || '').toLowerCase() === muscleGroup.toLowerCase()
   );
-  console.log(`→ ${exercisesInGroup.length} exercises matched this group:`, exercisesInGroup);
   if (exercisesInGroup.length === 0) {
-    console.warn('⚠️ NO exercises matched — check muscleGroup arg vs the categories listed above.');
+    console.warn(`⚠️ getExerciseList("${muscleGroup}"): no exercises matched this category.`);
   }
 
   // --- 4. logs availability ---
@@ -128,22 +121,9 @@ async function getExerciseList(muscleGroup, dataDir = './Data', now = new Date()
 
   // Build a normalised index once: normKey(logKey) -> logs array.
   let logIndex = null;
-  if (allLogs == null) {
-    console.warn('⚠️ allLogs is null — every exercise will be no-history');
-  } else {
+  if (allLogs != null) {
     logIndex = {};
     for (const k of Object.keys(allLogs)) logIndex[normKey(k)] = allLogs[k];
-
-    const loggedKeys = Object.keys(allLogs);
-    console.log(`allLogs loaded: ${loggedKeys.length} exercises have log entries`);
-
-    const logsFor = n => allLogs[n] || logIndex[normKey(n)] || [];
-    const matched = exercisesInGroup.filter(n => logsFor(n).length);
-    console.log(`of the ${exercisesInGroup.length} in-group exercises, ${matched.length} have matching log keys:`, matched);
-    const unmatched = exercisesInGroup.filter(n => !logsFor(n).length);
-    if (unmatched.length) {
-      console.log('in-group exercises with NO matching log key (name mismatch or never trained):', unmatched);
-    }
   }
 
   const nowMs = now.getTime();
@@ -158,7 +138,7 @@ async function getExerciseList(muscleGroup, dataDir = './Data', now = new Date()
 
     if (!days.length) {
       result[CONFIG.DEFAULT_TIER_FOR_NO_HISTORY].push(name);
-      console.log(`  ${name}: 0 sessions → ${CONFIG.DEFAULT_TIER_FOR_NO_HISTORY}`);
+      if (EXERCISE_LIST_DEBUG) console.log(`  ${name}: 0 sessions → ${CONFIG.DEFAULT_TIER_FOR_NO_HISTORY}`);
       continue;
     }
 
