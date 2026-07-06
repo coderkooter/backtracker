@@ -113,7 +113,15 @@ function buildExerciseCard(name, fromQuickList) {
 
   renderLastLogs(card, name);
   fillPrediction(card, name);
+  renderCoachNote(card, name);
   return card;
+}
+
+function renderCoachNote(card, name) {
+  const note = getAiCoach(name);
+  const box = card.querySelector('.coach-text');
+  box.hidden = !note;
+  box.textContent = note || '';
 }
 
 function fillPrediction(card, name) {
@@ -157,10 +165,6 @@ function handleExerciseListClick(e) {
     e.target.classList.add('selected');
     const rpe = parseInt(e.target.dataset.rpe, 10);
     card.dataset.rpe = rpe;
-
-    const coachBox = card.querySelector('.coach-text');
-    coachBox.hidden = false;
-    coachBox.textContent = getAiCoach(name, rpe);
     return;
   }
 
