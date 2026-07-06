@@ -148,6 +148,7 @@ async function getExerciseList(muscleGroup, dataDir = './Data', now = new Date()
 
   const nowMs = now.getTime();
   const result = { Main_List: [], Quick_List: [], Search_List: [] };
+  const mainMisses = []; // exercises that had sessions but didn't reach Main, + why
 
   // --- 5. per-exercise tiering ---
   for (const name of exercisesInGroup) {
@@ -176,6 +177,19 @@ async function getExerciseList(muscleGroup, dataDir = './Data', now = new Date()
     console.log(
       `  ${name}: ${days.length} sessions | score=${score.toFixed(2)} | priorScore=${priorScore.toFixed(2)} | lastSession=${lastSessionAgeDays.toFixed(1)}d ago → ${tier}`
     );
+
+    // Explain every near-Main outcome so "why isn't this in Main?" is answerable.
+    if (tier !== 'Main_List') {
+      let why;
+      if (lastSessionAgeDays > CONFIG.STALE_DAYS) {
+        why = `STALE override: last session ${lastSessionAgeDays.toFixed(1)}d ago > STALE_DAYS(${CONFIG.STALE_DAYS})`;
+      } else if (score >= CONFIG.MAIN_EXIT_SCORE && score < CONFIG.MAIN_ENTER_SCORE) {
+        why = `score ${score.toFixed(2)} is in the hysteresis band [${CONFIG.MAIN_EXIT_SCORE}, ${CONFIG.MAIN_ENTER_SCORE}) but priorScore ${priorScore.toFixed(2)} < MAIN_ENTER(${CONFIG.MAIN_ENTER_SCORE}) → never earned Main, no grace`;
+      } else {
+        why = `score ${score.toFixed(2)} < MAIN_ENTER(${CONFIG.MAIN_ENTER_SCORE}); needs ~${(CONFIG.MAIN_ENTER_SCORE - score).toFixed(2)} more (roughly ${Math.ceil((CONFIG.MAIN_ENTER_SCORE - score) / Math.exp(-lastSessionAgeDays / CONFIG.RECENCY_HALF_LIFE_DAYS))} more recent sessions)`;
+      }
+      mainMisses.push({ name, score: +score.toFixed(2), tier, why });
+    }
   }
 
   // --- 6. final result ---
@@ -186,6 +200,33 @@ async function getExerciseList(muscleGroup, dataDir = './Data', now = new Date()
   });
   console.log('full result:', result);
   console.groupEnd();
+
+  // === LOUD SUMMARY (printed OUTSIDE the collapsed group so it's always visible) ===
+  console.log(
+    `%c[getExerciseList:${muscleGroup}] Main_List has ${result.Main_List.length} entries`,
+    `font-weight:bold;font-size:13px;color:${result.Main_List.length ? '#16a34a' : '#dc2626'}`
+  );
+  if (result.Main_List.length === 0) {
+    console.warn(
+      `❗ THIS FUNCTION PRODUCED ZERO MAIN ENTRIES for "${muscleGroup}". ` +
+      `So if the screen shows no Main items, the bug is UPSTREAM (scoring/data), not rendering.`
+    );
+    if (mainMisses.length) {
+      console.warn('Closest exercises to Main and why each missed:');
+      console.table(mainMisses.sort((a, b) => b.score - a.score).slice(0, 10));
+    } else {
+      console.warn('No exercise in this group had ANY logged sessions → likely a log-key join problem (see the "matching log keys" line above).');
+    }
+  } else {
+    console.log('✅ Main_List contents being returned:', result.Main_List);
+    console.warn(
+      `👉 RENDER CHECK: this function IS returning ${result.Main_List.length} Main item(s). ` +
+      `If the screen still shows none, the bug is in the UI. Add this line where you consume the result:\n` +
+      `   console.log('[UI] received Main_List:', list.Main_List);\n` +
+      `and confirm it logs the same ${result.Main_List.length} item(s).`
+    );
+  }
+  console.log('[getExerciseList] RETURNING →', JSON.parse(JSON.stringify(result)));
 
   return result;
 }
