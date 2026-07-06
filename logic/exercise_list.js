@@ -8,11 +8,7 @@
 // has ever logged (plus everything defined in exercises_info.json) gets
 // bucketed into a tier based on how often — and how recently — it shows up:
 //
-//   Main    -> logged often, and recently. The "default" lifts. Exercises
-//              flagged "basic": true in exercises_info.json (the staple
-//              compound lift for their muscle group) always land here too,
-//              regardless of score/history — a fresh install shouldn't open
-//              to an empty Main list.
+//   Main    -> logged often, and recently. The "default" lifts.
 //   Quick   -> used to be logged often, but has cooled off. Still one tap
 //              away instead of buried in search.
 //   Search  -> rarely logged, or logged a lot once but now stale for a long
@@ -190,12 +186,6 @@ async function getExerciseList(muscleGroup, dataDir = './Data', now = new Date()
 
   // --- 5. per-exercise tiering ---
   for (const name of exercisesInGroup) {
-    if (infoBlob[name].basic) {
-      result.Main_List.push(name);
-      console.log(`  ${name}: flagged "basic" → Main_List (score bypassed)`);
-      continue;
-    }
-
     const logs = allLogs ? (allLogs[name] || []) : [];
     const days = sessionDays(logs).sort();
 

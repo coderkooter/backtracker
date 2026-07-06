@@ -1,7 +1,6 @@
 {
   "Bench Press": {
     "category": "chest",
-    "basic": true,
     "rep_range": [
       2,
       5
@@ -226,7 +225,6 @@
   },
   "Deadlift": {
     "category": "back",
-    "basic": true,
     "rep_range": [
       1,
       5
@@ -269,7 +267,6 @@
   },
   "Barbell Row": {
     "category": "back",
-    "basic": true,
     "rep_range": [
       5,
       8
@@ -480,7 +477,6 @@
   },
   "Squat": {
     "category": "legs",
-    "basic": true,
     "rep_range": [
       2,
       5
@@ -803,7 +799,6 @@
   },
   "Overhead Press": {
     "category": "shoulders",
-    "basic": true,
     "rep_range": [
       3,
       6
@@ -958,7 +953,6 @@
   },
   "Barbell Curl": {
     "category": "biceps",
-    "basic": true,
     "rep_range": [
       6,
       10
@@ -1113,7 +1107,6 @@
   },
   "Close-Grip Bench Press": {
     "category": "triceps",
-    "basic": true,
     "rep_range": [
       5,
       8
@@ -1226,7 +1219,6 @@
   },
   "Hanging Leg Raise": {
     "category": "core",
-    "basic": true,
     "rep_range": [
       8,
       15
@@ -1339,7 +1331,6 @@
   },
   "Wrist Curl": {
     "category": "forearms",
-    "basic": true,
     "rep_range": [
       12,
       20
@@ -1368,7 +1359,6 @@
   },
   "Barbell Shrug": {
     "category": "traps",
-    "basic": true,
     "rep_range": [
       8,
       12
