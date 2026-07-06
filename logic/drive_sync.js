@@ -205,17 +205,36 @@ async function _pullAiCoach() {
     const file = searchData.files && searchData.files[0];
 
     if (!file) {
-      // drive.file scope only sees files THIS app created or opened — see caveat below
-      console.warn('drive_sync: ai_coach.json not found (drive.file scope; app-created/opened files only)');
+      // drive.file scope only sees files THIS app created or opened — a file
+      // just uploaded straight into Drive is invisible to this search until
+      // it's opened through this app (e.g. via a file picker), so this is
+      // the most likely reason coach notes don't show up.
+      console.warn('drive_sync: ai_coach.json not found in Drive — remember drive.file scope only sees files this app created or opened, not ones uploaded directly in Drive');
       return;
     }
 
     const res = await _driveFetch(`https://www.googleapis.com/drive/v3/files/${file.id}?alt=media`);
-    if (res.ok) {
-      const text = await res.text();
-      if (text && typeof importAiCoach === 'function') importAiCoach(JSON.parse(text));
-      console.log('drive_sync: ai_coach.json loaded');
+    if (!res.ok) {
+      console.error(`drive_sync: ai_coach.json found but fetch failed (HTTP ${res.status})`);
+      return;
     }
+
+    const text = await res.text();
+    if (!text) {
+      console.warn('drive_sync: ai_coach.json found but empty');
+      return;
+    }
+
+    let notes;
+    try {
+      notes = JSON.parse(text);
+    } catch (err) {
+      console.error('drive_sync: ai_coach.json is not valid JSON', err);
+      return;
+    }
+
+    if (typeof importAiCoach === 'function') importAiCoach(notes);
+    console.log(`drive_sync: ai_coach.json loaded — ${Object.keys(notes).length} note(s) for:`, Object.keys(notes));
   } catch (err) {
     console.error('drive_sync: failed to load ai_coach.json', err);
   }

@@ -29,7 +29,7 @@
 // Tune everything in SEARCH_CONFIG / SYNONYMS / CANONICAL_TOKENS below.
 
 // add near the top, just under SEARCH_CONFIG:
-const SEARCH_DEBUG = true; // flip to false once it's working
+const SEARCH_DEBUG = false; // flip to true for a per-keystroke scoring trace
 
 const SEARCH_CONFIG = {
     DATA_URL: './Data/exercises_info.json', // same path exercise_list.js uses

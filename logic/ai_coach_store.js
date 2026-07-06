@@ -30,6 +30,7 @@ function _loadCachedCoach() {
 }
 
 let _aiCoachData = _loadCachedCoach();
+console.log(`ai_coach_store: ${Object.keys(_aiCoachData).length} note(s) cached from a previous sync`);
 
 function importAiCoach(data) {
   _aiCoachData = (data && typeof data === 'object') ? data : {};
