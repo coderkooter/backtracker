@@ -72,6 +72,15 @@ input { font-family: inherit; }
 .sync-error { background: var(--warn); }
 @keyframes pulseDot { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
 
+#ai-coach-upload {
+  flex: 0 0 auto;
+  margin: auto 14px auto 0;
+  border: none; background: none; padding: 0;
+  font-size: 14px; line-height: 1;
+  opacity: .7;
+}
+#ai-coach-upload:hover { opacity: 1; }
+
 #app { padding: 14px; max-width: 480px; margin: 0 auto; }
 
 /* ---------- Exercise card ---------- */

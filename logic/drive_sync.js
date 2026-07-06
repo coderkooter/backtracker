@@ -27,12 +27,14 @@ const _driveState = {
   tokenClient: null,
   accessToken: null,
   fileId: null,
+  aiCoachFileId: null,
   pushTimer: null,
   syncing: false
 };
 
 function initDriveSync() {
   _injectSyncStatusUI();
+  _injectAiCoachUploadUI();
   _waitForGoogleThen(_setupTokenClient);
 }
 
@@ -240,6 +242,109 @@ async function _pullAiCoach() {
   }
 }
 
+async function _findOrCreateAiCoachFile() {
+  if (_driveState.aiCoachFileId) return _driveState.aiCoachFileId;
+
+  const q = encodeURIComponent(`name='ai_coach.json' and trashed=false`);
+  const searchRes = await _driveFetch(
+    `https://www.googleapis.com/drive/v3/files?q=${q}&spaces=drive&fields=files(id,name)`
+  );
+  const searchData = await searchRes.json();
+
+  if (searchData.files && searchData.files.length) {
+    _driveState.aiCoachFileId = searchData.files[0].id;
+    return _driveState.aiCoachFileId;
+  }
+
+  const createRes = await _driveFetch('https://www.googleapis.com/drive/v3/files', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: 'ai_coach.json' })
+  });
+  const createData = await createRes.json();
+  _driveState.aiCoachFileId = createData.id;
+  return _driveState.aiCoachFileId;
+}
+
+// Writes notes to ai_coach.json THROUGH this app (find-or-create, same
+// pattern as backtracker_logs.json) so drive.file scope can read it back
+// afterward — a file uploaded directly on drive.google.com never becomes
+// visible to this scope.
+async function writeAiCoach(notes) {
+  const fileId = await _findOrCreateAiCoachFile();
+  await _driveFetch(
+    `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`,
+    {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(notes)
+    }
+  );
+}
+
+// Manual upload path: user picks a local ai_coach.json (flat
+// { "Exercise Name": "note" } map — see ai_coach_store.js) and this writes
+// it to Drive through the app, then reloads it into the running UI.
+async function uploadAiCoachFile(file) {
+  if (!_driveState.accessToken) {
+    console.warn('uploadAiCoachFile: connect Drive first');
+    return;
+  }
+
+  const text = await file.text();
+  let notes;
+  try {
+    notes = JSON.parse(text);
+  } catch (err) {
+    console.error('uploadAiCoachFile: selected file is not valid JSON', err);
+    alert('That file is not valid JSON — check the format and try again.');
+    return;
+  }
+  if (!notes || typeof notes !== 'object' || Array.isArray(notes)) {
+    console.error('uploadAiCoachFile: expected a flat { "Exercise Name": "note" } object', notes);
+    alert('ai_coach.json should be a flat object of { "Exercise Name": "note" }.');
+    return;
+  }
+
+  try {
+    await writeAiCoach(notes);
+    importAiCoach(notes);
+    console.log(`uploadAiCoachFile: uploaded ${Object.keys(notes).length} note(s) to Drive`, Object.keys(notes));
+    if (typeof window.onDriveDataLoaded === 'function') window.onDriveDataLoaded();
+  } catch (err) {
+    console.error('uploadAiCoachFile: upload failed', err);
+  }
+}
+
+function _injectAiCoachUploadUI() {
+  const nav = document.querySelector('.topnav');
+  if (!nav || document.getElementById('ai-coach-upload')) return;
+
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'application/json';
+  input.id = 'ai-coach-upload-input';
+  input.hidden = true;
+  input.addEventListener('change', () => {
+    const file = input.files[0];
+    input.value = ''; // reset so picking the same file again still fires 'change'
+    if (file) uploadAiCoachFile(file);
+  });
+
+  const btn = document.createElement('button');
+  btn.id = 'ai-coach-upload';
+  btn.type = 'button';
+  btn.textContent = '📤';
+  btn.title = 'Upload ai_coach.json to Drive';
+  btn.addEventListener('click', () => {
+    if (!_driveState.accessToken) { connectDrive(); return; }
+    input.click();
+  });
+
+  nav.appendChild(input);
+  nav.appendChild(btn);
+}
+
 // Generate coaching notes from logged history, then write them to Drive
 // THROUGH this app (writeAiCoach) so drive.file scope can read them back.
 async function generateAndUploadCoach() {
@@ -311,5 +416,6 @@ function _parseCoachJson(raw) {
 }
 
 window.generateAndUploadCoach = generateAndUploadCoach;
+window.uploadAiCoachFile = uploadAiCoachFile;
 
 document.addEventListener('DOMContentLoaded', initDriveSync);
